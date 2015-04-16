@@ -56,7 +56,6 @@ Handle<Value> js_rtu_set_serial_mode(const Arguments& args) {
 	return Integer::New(ret);
 }
 
-/*
 // int modbus_rtu_get_rts(modbus_t *ctx);
 Handle<Value> js_rtu_get_rts(const Arguments& args) {
 	modbus_t *ctx = static_cast<modbus_t *>(External::Unwrap(args[0]));
@@ -75,7 +74,6 @@ Handle<Value> js_rtu_set_rts(const Arguments& args) {
 	
 	return Integer::New(ret);
 }
-*/
 
 // modbus_t *modbus_new_tcp(const char *ip, int port);
 // External new_tcp(String, Integer);
@@ -929,13 +927,17 @@ extern "C" void init (Handle<Object> target) {
 	target->Set(String::New("MODBUS_TCP_DEFAULT_PORT"), Number::New(MODBUS_TCP_DEFAULT_PORT));
 	target->Set(String::New("MODBUS_TCP_SLAVE"), Number::New(MODBUS_TCP_SLAVE));
 	target->Set(String::New("MODBUS_TCP_MAX_ADU_LENGTH"), Number::New(MODBUS_TCP_MAX_ADU_LENGTH));
+
+	target->Set(String::New("MODBUS_RTU_RTS_NONE"), Number::New(MODBUS_RTU_RTS_NONE));
+	target->Set(String::New("MODBUS_RTU_RTS_UP"), Number::New(MODBUS_RTU_RTS_UP));
+	target->Set(String::New("MODBUS_RTU_RTS_DOWN"), Number::New(MODBUS_RTU_RTS_DOWN));
 	
 	// functions
 	target->Set(String::New("new_rtu"), FunctionTemplate::New(js_new_rtu)->GetFunction());
 	target->Set(String::New("rtu_get_serial_mode"), FunctionTemplate::New(js_rtu_get_serial_mode)->GetFunction());
 	target->Set(String::New("rtu_set_serial_mode"), FunctionTemplate::New(js_rtu_set_serial_mode)->GetFunction());
-	//target->Set(String::New("rtu_get_rts"), FunctionTemplate::New(js_rtu_get_rts)->GetFunction());
-	//target->Set(String::New("rtu_set_rts"), FunctionTemplate::New(js_rtu_set_rts)->GetFunction());
+	target->Set(String::New("rtu_get_rts"), FunctionTemplate::New(js_rtu_get_rts)->GetFunction());
+	target->Set(String::New("rtu_set_rts"), FunctionTemplate::New(js_rtu_set_rts)->GetFunction());
 	
 	target->Set(String::New("new_tcp"), FunctionTemplate::New(js_new_tcp)->GetFunction());
 	target->Set(String::New("new_tcp_pi"), FunctionTemplate::New(js_new_tcp_pi)->GetFunction());
