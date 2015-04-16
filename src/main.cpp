@@ -119,13 +119,12 @@ Handle<Value> js_get_byte_timeout(const Arguments& args) {
 	modbus_t *ctx = static_cast<modbus_t *>(External::Unwrap(args[0]));
 	Local<Object> timeout_obj = Local<Object>::Cast(args[1]);
 	
-	struct timeval timeout;
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 0;
-	modbus_get_byte_timeout(ctx, &timeout);
+	uint32_t tv_sec = 0;
+	uint32_t tv_usec = 0;
+	modbus_get_byte_timeout(ctx, &tv_sec, &tv_usec);
 	
-	timeout_obj->Set(String::New("tv_sec"), Uint32::New(timeout.tv_sec));
-	timeout_obj->Set(String::New("tv_usec"), Uint32::New(timeout.tv_usec));
+	timeout_obj->Set(String::New("tv_sec"), Uint32::New(tv_sec));
+	timeout_obj->Set(String::New("tv_usec"), Uint32::New(tv_usec));
 	
 	return Undefined();
 }
@@ -135,11 +134,10 @@ Handle<Value> js_get_byte_timeout(const Arguments& args) {
 Handle<Value> js_set_byte_timeout(const Arguments& args) {
 	modbus_t *ctx = static_cast<modbus_t *>(External::Unwrap(args[0]));
 	Local<Object> timeout_obj = Local<Object>::Cast(args[1]);
-	
-	struct timeval timeout;
-	timeout.tv_sec = timeout_obj->Get(String::New("tv_sec"))->Uint32Value();
-	timeout.tv_usec = timeout_obj->Get(String::New("tv_usec"))->Uint32Value();
-	modbus_get_byte_timeout(ctx, &timeout);
+
+	uint32_t tv_sec = timeout_obj->Get(String::New("tv_sec"))->Uint32Value();
+	uint32_t tv_usec = timeout_obj->Get(String::New("tv_usec"))->Uint32Value();
+	modbus_get_byte_timeout(ctx, &tv_sec, &tv_usec);
 	
 	return Undefined();
 }
@@ -182,13 +180,12 @@ Handle<Value> js_get_response_timeout(const Arguments& args) {
 	modbus_t *ctx = static_cast<modbus_t *>(External::Unwrap(args[0]));
 	Local<Object> timeout_obj = Local<Object>::Cast(args[1]);
 	
-	struct timeval timeout;
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 0;
-	modbus_get_response_timeout(ctx, &timeout);
+	uint32_t tv_sec = 0;
+	uint32_t tv_usec = 0;
+	modbus_get_response_timeout(ctx, &tv_sec, &tv_usec);
 	
-	timeout_obj->Set(String::New("tv_sec"), Uint32::New(timeout.tv_sec));
-	timeout_obj->Set(String::New("tv_usec"), Uint32::New(timeout.tv_usec));
+	timeout_obj->Set(String::New("tv_sec"), Uint32::New(tv_sec));
+	timeout_obj->Set(String::New("tv_usec"), Uint32::New(tv_usec));
 	
 	return Undefined();
 }
@@ -199,10 +196,9 @@ Handle<Value> js_set_response_timeout(const Arguments& args) {
 	modbus_t *ctx = static_cast<modbus_t *>(External::Unwrap(args[0]));
 	Local<Object> timeout_obj = Local<Object>::Cast(args[1]);
 	
-	struct timeval timeout;
-	timeout.tv_sec = timeout_obj->Get(String::New("tv_sec"))->Uint32Value();
-	timeout.tv_usec = timeout_obj->Get(String::New("tv_usec"))->Uint32Value();
-	modbus_set_response_timeout(ctx, &timeout);
+	uint32_t tv_sec = timeout_obj->Get(String::New("tv_sec"))->Uint32Value();
+	uint32_t tv_usec = timeout_obj->Get(String::New("tv_usec"))->Uint32Value();
+	modbus_set_response_timeout(ctx, tv_sec, tv_usec);
 	
 	return Undefined();
 }
@@ -349,7 +345,7 @@ Handle<Value> js_report_slave_id(const Arguments& args) {
 	uint8_t dest[REPORT_LEN];
     memset(dest, 0, REPORT_LEN * sizeof(uint8_t));
 	
-	int ret = modbus_report_slave_id(ctx, dest);
+	int ret = modbus_report_slave_id(ctx, REPORT_LEN, dest);
 	
 	if (ret > 0) dest_obj->Set(0, Integer::New(dest[0])); // Slave ID
 	if (ret > 1) dest_obj->Set(1, Integer::New(dest[1])); // Run Status Indicator
@@ -888,7 +884,7 @@ extern "C" void init (Handle<Object> target) {
 	
 	target->Set(String::New("MODBUS_MAX_READ_REGISTERS"), Number::New(MODBUS_MAX_READ_REGISTERS));
 	target->Set(String::New("MODBUS_MAX_WRITE_REGISTERS"), Number::New(MODBUS_MAX_WRITE_REGISTERS));
-	target->Set(String::New("MODBUS_MAX_RW_WRITE_REGISTERS"), Number::New(MODBUS_MAX_RW_WRITE_REGISTERS));
+	target->Set(String::New("MODBUS_MAX_RW_WRITE_REGISTERS"), Number::New(MODBUS_MAX_WR_WRITE_REGISTERS));
 	
 	target->Set(String::New("MODBUS_ENOBASE"), Number::New(MODBUS_ENOBASE));
 	
