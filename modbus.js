@@ -751,7 +751,7 @@ function createSlaveTcp(a, con, data, cbs) {
 		mb.close_mt(ctx);
 		data._freeMap();
 		data = null;
-		//mb.free(ctx);
+		mb.free(ctx);
 		
 		ctx = null;
 		
@@ -964,9 +964,9 @@ function createMasterTcp(a, con, cbs) {
 		mb.tcp_close(sock);
 
 		mb.close_mt(ctx);
-		//mb.free(ctx);
-		data._freeMap();
-		data = null;
+		mb.free(ctx);
+		//data._freeMap();
+		//data = null;
 		
 		
 		ctx = null;
@@ -1012,9 +1012,9 @@ function createMasterRtu(a, con, cbs) {
 		
 		mb.close_mt(ctx);
 
-		data._freeMap();
-		data = null;
-		//mb.free(ctx);
+		//data._freeMap();
+		//data = null;
+		mb.free(ctx);
 		
 		ctx = null;
 		
